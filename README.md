@@ -242,3 +242,5 @@ El enunciado tiene ambigüedades; estas son las decisiones tomadas:
 - No se incluyen pruebas de integración con base de datos; las pruebas automáticas cubren el cálculo de puntaje y prioridad.
 
 
+Claude:
+https://claude.ai/share/531a112f-0ffe-435e-8607-bad731666c31
