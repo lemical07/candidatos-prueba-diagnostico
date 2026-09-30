@@ -1,12 +1,23 @@
 const { HttpError } = require('./errors');
+const { sendJson } = require('./httpUtils');
 
-// eslint-disable-next-line no-unused-vars
-module.exports = (err, req, res, next) => {
-  if (err instanceof HttpError) {
-    return res.status(err.status).json({ error: err.message, ...(err.details && { details: err.details }) });
+function handleError(err, res) {
+  if (res.headersSent) {
+    res.destroy();
+    return;
   }
-  if (err.type === 'entity.parse.failed') return res.status(400).json({ error: 'JSON inválido' });
-  if (err.type === 'entity.too.large') return res.status(413).json({ error: 'Cuerpo demasiado grande' });
+
+  if (err instanceof HttpError) {
+    // Si el cuerpo era demasiado grande, se cierra la conexión tras responder
+    if (err.status === 413) res.setHeader('Connection', 'close');
+    return sendJson(res, err.status, {
+      error: err.message,
+      ...(err.details && { details: err.details }),
+    });
+  }
+
   console.error(err);
-  res.status(500).json({ error: 'Error interno del servidor' });
-};
+  sendJson(res, 500, { error: 'Error interno del servidor' });
+}
+
+module.exports = { handleError };

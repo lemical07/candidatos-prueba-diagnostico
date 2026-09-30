@@ -6,8 +6,10 @@ const MAX_COVER_LETTER = 5000;
 const isPositiveInt = (v) => Number.isInteger(v) && v > 0;
 const isPositiveIntString = (v) => typeof v === 'string' && /^[1-9]\d*$/.test(v);
 
-async function create(req, res) {
-  const { candidateId, vacancyId, source, coverLetter } = req.body ?? {};
+// Cada función recibe { body, query, params } y devuelve { status, body }.
+
+async function create({ body }) {
+  const { candidateId, vacancyId, source, coverLetter } = body;
   const errors = [];
 
   if (!isPositiveInt(candidateId)) errors.push('candidateId es obligatorio y debe ser un entero positivo');
@@ -23,11 +25,11 @@ async function create(req, res) {
   const application = await service.createApplication({
     candidateId, vacancyId, source, coverLetter: coverLetter.trim(),
   });
-  res.status(201).json(application);
+  return { status: 201, body: application };
 }
 
-async function list(req, res) {
-  const { status, vacancyId } = req.query;
+async function list({ query }) {
+  const { status, vacancyId } = query;
   const errors = [];
 
   if (status !== undefined && !STATUSES.includes(status)) {
@@ -42,16 +44,19 @@ async function list(req, res) {
     status,
     vacancyId: vacancyId !== undefined ? Number(vacancyId) : undefined,
   });
-  res.json(applications);
+  return { status: 200, body: applications };
 }
 
-async function changeStatus(req, res) {
-  if (!isPositiveIntString(req.params.id)) throw new HttpError(400, 'El id debe ser un entero positivo');
-  const status = req.body?.status;
+async function changeStatus({ params, body }) {
+  if (!isPositiveIntString(params.id)) throw new HttpError(400, 'El id debe ser un entero positivo');
+
+  const { status } = body;
   if (!STATUSES.includes(status)) {
     throw new HttpError(400, `status es obligatorio y debe ser uno de: ${STATUSES.join(', ')}`);
   }
-  res.json(await service.updateStatus(Number(req.params.id), status));
+
+  const application = await service.updateStatus(Number(params.id), status);
+  return { status: 200, body: application };
 }
 
 module.exports = { create, list, changeStatus };
