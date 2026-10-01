@@ -1,4 +1,4 @@
-const { HttpError } = require('./errors');
+const { HttpError } = require('./error');
 const { sendJson } = require('./httpUtils');
 
 function handleError(err, res) {

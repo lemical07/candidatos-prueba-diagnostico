@@ -1,4 +1,4 @@
-const { HttpError } = require('./errors');
+const { HttpError } = require('./error');
 
 const MAX_BODY_BYTES = 50 * 1024;
 

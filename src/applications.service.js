@@ -1,6 +1,6 @@
 const pool = require('./config/db');
-const { HttpError } = require('./errors');
-const { FINAL_STATUSES, REAPPLY_DAYS } = require('./constants');
+const { HttpError } = require('./error');
+const { FINAL_STATUSES, REAPPLY_DAYS } = require('./constant');
 const { calculateScore, priorityFromScore } = require('./scoring');
 
 const SELECT_APPLICATION = `

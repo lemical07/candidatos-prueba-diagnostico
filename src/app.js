@@ -1,4 +1,4 @@
-const { HttpError } = require('./errors');
+const { HttpError } = require('./error');
 const { resolveRoute } = require('./applications.routes');
 const { readJsonBody, sendJson } = require('./httpUtils');
 const { handleError } = require('./errorHandler');

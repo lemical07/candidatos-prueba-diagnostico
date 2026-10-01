@@ -1,6 +1,6 @@
 const service = require('./applications.service');
-const { HttpError } = require('./errors');
-const { SOURCES, STATUSES } = require('./constants');
+const { HttpError } = require('./error');
+const { SOURCES, STATUSES } = require('./constant');
 
 const MAX_COVER_LETTER = 5000;
 const isPositiveInt = (v) => Number.isInteger(v) && v > 0;
